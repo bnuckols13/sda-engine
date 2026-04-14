@@ -1,6 +1,13 @@
 {
+  "buildCommand": "cd dashboard && npm install && npx vite build && cd .. && mkdir -p _output/participant _output/scoring _output/dashboard && cp participant/* _output/participant/ && cp scoring/* _output/scoring/ && cp -r dashboard/dist/* _output/dashboard/",
+  "outputDirectory": "_output",
   "rewrites": [
-    { "source": "/dashboard/(.*)", "destination": "/dashboard/dist/$1" },
+    { "source": "/dashboard/(.*)", "destination": "/dashboard/$1" },
+    { "source": "/dashboard", "destination": "/dashboard/index.html" },
     { "source": "/(.*)", "destination": "/participant/$1" }
+  ],
+  "headers": [
+    { "source": "/participant/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=3600" }] },
+    { "source": "/scoring/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=3600" }] }
   ]
 }
