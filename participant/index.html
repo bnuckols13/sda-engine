@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Dream Journal — SDA Research Study</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <header class="app-header">
+      <h1>Dream Journal</h1>
+      <p>Structural Dream Analysis Research Study</p>
+    </header>
+
+    <!-- LOADING -->
+    <div id="screen-loading" class="screen active">
+      <div class="card" style="text-align:center; padding:3rem 1rem;">
+        <p>Loading your dream journal...</p>
+      </div>
+    </div>
+
+    <!-- INVALID TOKEN -->
+    <div id="screen-invalid" class="screen">
+      <div class="card">
+        <h2>Invalid Link</h2>
+        <p>This link is not valid or has expired. Please contact your study coordinator for a new link.</p>
+      </div>
+    </div>
+
+    <!-- CONSENT -->
+    <div id="screen-consent" class="screen">
+      <div class="card">
+        <h2>Research Participation Consent</h2>
+        <div class="consent-text">
+          <p><strong>Study:</strong> <span id="consent-study-name"></span></p>
+          <p><strong>What you will do:</strong> Record your dreams in this journal over the course of your participation. After writing each dream, you will answer a brief questionnaire (8-14 questions) about your experience in the dream. You may also optionally classify the dream using a guided walkthrough.</p>
+          <p><strong>Time required:</strong> Each dream entry takes approximately 5-10 minutes. You are asked to record dreams as soon as possible after waking.</p>
+          <p><strong>Confidentiality:</strong> Your dream texts and responses are stored securely and identified only by a participant code. Your name is not linked to your data. Only authorized researchers have access to the data.</p>
+          <p><strong>Voluntary participation:</strong> Your participation is voluntary. You may stop at any time without penalty. You may skip any dream you prefer not to record.</p>
+          <p><strong>Risks:</strong> Recording dreams may occasionally bring up uncomfortable memories or emotions. If you experience distress, please contact your study coordinator or therapist.</p>
+          <p><strong>Benefits:</strong> You will be able to view your own dream patterns over time. Your data contributes to research on dream structure and therapeutic change.</p>
+        </div>
+        <div class="consent-check">
+          <input type="checkbox" id="consent-checkbox">
+          <label for="consent-checkbox" style="font-weight:400;">I have read and understand the above information. I voluntarily consent to participate in this study.</label>
+        </div>
+        <button class="btn btn-primary" id="consent-btn" disabled>I Consent — Begin</button>
+      </div>
+    </div>
+
+    <!-- JOURNAL (dream list + new entry button) -->
+    <div id="screen-journal" class="screen">
+      <div class="card">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
+          <h2 style="margin-bottom:0;">Your Dreams</h2>
+          <span id="dream-count" style="font-size:0.82rem; color:var(--text-secondary);"></span>
+        </div>
+        <div id="dream-list"></div>
+        <div id="no-dreams" style="text-align:center; padding:2rem 0; color:var(--text-secondary); font-size:0.9rem;">
+          No dreams recorded yet. Record your first dream below.
+        </div>
+      </div>
+      <button class="btn btn-primary" id="new-dream-btn">Record a New Dream</button>
+      <button class="btn btn-secondary" id="view-trajectory-btn" style="margin-top:0.5rem; display:none;">View My Trajectory</button>
+    </div>
+
+    <!-- DREAM ENTRY -->
+    <div id="screen-entry" class="screen">
+      <div class="card">
+        <h2>Record Your Dream</h2>
+        <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:1rem;">Describe your dream in as much detail as you can remember. Include what you did, what happened around you, who else was present, and how you felt.</p>
+        <label for="dream-date">Date of Dream</label>
+        <input type="date" id="dream-date" style="margin-bottom:1rem;">
+        <label for="dream-text">Dream Narrative</label>
+        <textarea id="dream-text" placeholder="I was in a..."></textarea>
+        <div class="word-count" id="word-count">0 words (minimum 50)</div>
+      </div>
+      <div class="btn-group">
+        <button class="btn btn-secondary" id="entry-back-btn">Back</button>
+        <button class="btn btn-primary" id="entry-next-btn" disabled>Continue to Questions</button>
+      </div>
+    </div>
+
+    <!-- PART B -->
+    <div id="screen-partb" class="screen">
+      <div class="card">
+        <h2>About This Dream</h2>
+        <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:0.5rem;">Rate each statement based on the dream you just described.</p>
+        <div id="partb-items"></div>
+      </div>
+      <div class="btn-group">
+        <button class="btn btn-secondary" id="partb-back-btn">Back</button>
+        <button class="btn btn-primary" id="partb-next-btn" disabled>Continue</button>
+      </div>
+    </div>
+
+    <!-- SELF-CODING (optional) -->
+    <div id="screen-selfcode" class="screen">
+      <div class="card">
+        <h2>Classify Your Dream (Optional)</h2>
+        <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:1rem;">Walk through a few questions to classify the structure of your dream. This is optional and helps the research.</p>
+        <div id="tree-container"></div>
+      </div>
+      <div class="btn-group">
+        <button class="btn btn-secondary" id="selfcode-skip-btn">Skip This Step</button>
+        <button class="btn btn-success" id="selfcode-save-btn" style="display:none;">Save & Finish</button>
+      </div>
+    </div>
+
+    <!-- SAVE CONFIRMATION -->
+    <div id="screen-saved" class="screen">
+      <div class="card" style="text-align:center;">
+        <div style="font-size:2rem; margin-bottom:0.5rem;">&#10003;</div>
+        <h2>Dream Recorded</h2>
+        <p id="saved-summary"></p>
+        <div id="saved-scores" style="margin-top:1rem;"></div>
+      </div>
+      <button class="btn btn-primary" id="saved-journal-btn" style="margin-top:1rem;">Back to Journal</button>
+    </div>
+
+    <!-- TRAJECTORY -->
+    <div id="screen-trajectory" class="screen">
+      <div class="card">
+        <h2>Your Dream Trajectory</h2>
+        <p style="font-size:0.85rem; color:var(--text-secondary);">Your self-reported agency scores over time. Higher scores indicate greater sense of choice, action, and control in your dreams.</p>
+        <div class="chart-container">
+          <canvas id="trajectory-canvas" height="250"></canvas>
+        </div>
+      </div>
+      <div id="trajectory-stats" class="card" style="display:none;"></div>
+      <button class="btn btn-secondary" id="trajectory-back-btn">Back to Journal</button>
+    </div>
+  </div>
+
+  <!-- Supabase CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <!-- Scoring engine -->
+  <script src="../scoring/sda-scoring-data.js"></script>
+  <script src="../scoring/sda-scoring-engine.js"></script>
+  <script src="../scoring/sda-statistics.js"></script>
+  <script src="../scoring/decision-tree-data.js"></script>
+  <!-- App -->
+  <script src="app.js"></script>
+</body>
+</html>

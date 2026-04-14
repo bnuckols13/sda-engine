@@ -1,0 +1,6 @@
+{
+  "rewrites": [
+    { "source": "/dashboard/(.*)", "destination": "/dashboard/dist/$1" },
+    { "source": "/(.*)", "destination": "/participant/$1" }
+  ]
+}
